@@ -1,16 +1,16 @@
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Button, Text } from 'native-base';
 
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
+import HousekeepingNavigator from './navigation/HousekeepingNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
-
-const Stack = createStackNavigator();
 
 export default function App(props) {
   const isLoadingComplete = useCachedResources();
+  const [userType, setUserType] = useState('A');
 
   if (!isLoadingComplete) {
     return null;
@@ -19,10 +19,12 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
         <NavigationContainer linking={LinkingConfiguration}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
-          </Stack.Navigator>
+          {userType === 'A' ? <HousekeepingNavigator /> : <BottomTabNavigator />}
         </NavigationContainer>
+        <View style={styles.buttons}>
+          <Button style={styles.demoBtn} onPress={() => setUserType('A')} />
+          <Button style={styles.demoBtn} onPress={() => setUserType('B')} />
+        </View>
       </View>
     );
   }
@@ -32,5 +34,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  demoBtn: {
+    marginLeft: 5,
+    width: 5,
+    height: 5,
   },
 });
