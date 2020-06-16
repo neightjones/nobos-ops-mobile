@@ -4,7 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
-import LinksScreen from '../screens/LinksScreen';
+import LibraryThemesScreen from '../screens/Library/Themes';
+import LibraryByThemeScreen from '../screens/Library/ByTheme';
 
 const HomeStack = createStackNavigator();
 
@@ -28,6 +29,14 @@ const HomeStackScreen = () => (
   </HomeStack.Navigator>
 );
 
+const LibraryStack = createStackNavigator();
+const LibraryStackScreen = () => (
+    <LibraryStack.Navigator>
+        <LibraryStack.Screen name="Themes" component={LibraryThemesScreen} options={{ title: 'Themes' }} />
+        <LibraryStack.Screen name="byTheme" component={LibraryByThemeScreen} />
+    </LibraryStack.Navigator>
+);
+
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
 
@@ -44,15 +53,15 @@ export default ({ navigation, route }) => {
       />
       <BottomTab.Screen
         name="library"
-        component={LinksScreen}
+        component={LibraryStackScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
-          tabBarLabel: 'My Library',
+          tabBarLabel: 'Library',
         }}
       />
       <BottomTab.Screen
         name="leaderboard"
-        component={LinksScreen}
+        component={LibraryStackScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-ribbon" />,
           tabBarLabel: 'Leaderboard'

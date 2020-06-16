@@ -4,7 +4,7 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'native-base';
 
 import useCachedResources from './hooks/useCachedResources';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
+import OnboardingNavigator from './navigation/OnboardingNavigator';
 import HousekeepingNavigator from './navigation/HousekeepingNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 
@@ -19,7 +19,7 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
         <NavigationContainer linking={LinkingConfiguration}>
-          {userType === 'A' ? <HousekeepingNavigator /> : <BottomTabNavigator />}
+          {userType === 'A' ? <HousekeepingNavigator /> : <OnboardingNavigator />}
         </NavigationContainer>
         <View style={styles.buttons}>
           <Button style={styles.demoBtn} onPress={() => setUserType('A')} />
