@@ -1,34 +1,35 @@
-import React, {useState} from 'react';
-import {Container, View, Text, H2} from 'native-base';
-import {Dimensions, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import { Container, View, H2 } from 'native-base';
+import { Dimensions, StyleSheet } from 'react-native';
 import TrainingCard from './Card';
 import ConfirmCard from './ConfirmCard';
-import { trainingSteps as data } from '../data';
+import { trainingSteps as data } from '../../data';
 
 import Carousel, {Pagination} from 'react-native-snap-carousel'; // Version can be specified in package.json
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
-const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 2.8);
+const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 2);
 //const ITEM_HEIGHT = Math.round((ITEM_WIDTH * 3) / 4);
 
-const Cards = () => {
+const Cards = ({ training }) => {
   const [index, setIndex] = useState(0);
   const [ackCount, setAckCount] = useState(0);
 
   const renderItem = item => {
-    if (item.confirmCard) {
+    if (item.confirmCard && training) {
       return (
-        <ConfirmCard data={item} complete={ackCount === data.length - 1} />
+        <ConfirmCard data={item} training={training} complete={ackCount === data.length} />
       );
     }
 
     return (
       <TrainingCard
         data={item}
-        count={data.length - 1}
+        count={data.length}
         style={styles.itemContainer}
-        onAck={() => setAckCount(ackCount + 1)}
+        training={training}
+        onAck={() => setAckCount(ackCount)}
       />
     );
   };
@@ -40,7 +41,6 @@ const Cards = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginTop: 20,
         }}>
         <H2>Restroom Cleaning</H2>
       </View>
@@ -54,7 +54,7 @@ const Cards = () => {
         onSnapToItem={index => setIndex(index)}
         useScrollView={true}
       />
-      <View
+      {/* <View
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -63,7 +63,7 @@ const Cards = () => {
         <Text style={{color: ackCount === data.length - 1 ? 'green' : 'grey'}}>
           {`${ackCount} / ${data.length - 1} Steps Acknowledged`}
         </Text>
-      </View>
+      </View> */}
       <Pagination
         dotsLength={data.length}
         activeDotIndex={index}
@@ -103,11 +103,5 @@ const styles = StyleSheet.create({
   itemLabel: {
     color: 'white',
     fontSize: 24,
-  },
-  counter: {
-    marginTop: 25,
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });

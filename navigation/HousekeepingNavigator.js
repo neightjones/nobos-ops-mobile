@@ -6,6 +6,7 @@ import * as React from 'react';
 import TabBarIcon from '../components/TabBarIcon';
 import LibraryThemesScreen from '../screens/Library/Themes';
 import LibraryByThemeScreen from '../screens/Library/ByTheme';
+import LibraryTopicSteps from '../screens/Library/TopicSteps';
 
 const HomeStack = createStackNavigator();
 
@@ -34,6 +35,7 @@ const LibraryStackScreen = () => (
     <LibraryStack.Navigator>
         <LibraryStack.Screen name="Themes" component={LibraryThemesScreen} options={{ title: 'Themes' }} />
         <LibraryStack.Screen name="byTheme" component={LibraryByThemeScreen} />
+        <LibraryStack.Screen name="topic" component={LibraryTopicSteps} options={{ title: 'Topic Review'}} />
     </LibraryStack.Navigator>
 );
 

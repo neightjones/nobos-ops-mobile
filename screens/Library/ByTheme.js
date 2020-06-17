@@ -22,7 +22,7 @@ export default function LibraryByTheme({ route }) {
             <ListItem
               key={topic.id}
               button
-              onPress={() => alert(topic.id)}
+              onPress={() => navigation.navigate('topic', { topicId: topic.id })}
             >
               <Body>
                 <Text>{topic.name}</Text>

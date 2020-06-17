@@ -86,9 +86,10 @@ export const trainingSteps = [
       'Replace shampoo and conditioner, soap, tissues, razor and toothbrush supplies.',
     imageUrl: BATHROOM_AMENITIES,
   },
-  {
-    confirmCard: true,
-    successImageUrl: CONFIRM_SUCCESS,
-    goBackImageUrl: CONFIRM_GO_BACK,
-  },
 ];
+
+  // {
+  //   confirmCard: true,
+  //   successImageUrl: CONFIRM_SUCCESS,
+  //   goBackImageUrl: CONFIRM_GO_BACK,
+  // },
