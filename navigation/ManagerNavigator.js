@@ -7,6 +7,7 @@ import TabBarIcon from '../components/TabBarIcon';
 
 import AuditCreateScreen from '../screens/Audits/Create';
 import AuditChecklistScreen from '../screens/Audits/Checklist';
+import AuditTakePicture from '../screens/Audits/TakePicture';
 
 import LibraryThemesScreen from '../screens/Library/Themes';
 import LibraryByThemeScreen from '../screens/Library/ByTheme';
@@ -18,6 +19,7 @@ const AuditStackScreen = () => (
   <AuditStack.Navigator>
     <AuditStack.Screen name="create" component={AuditCreateScreen}  options={{ title: 'Create New Audit' }} />
     <AuditStack.Screen name="checklist" component={AuditChecklistScreen}  options={{ title: 'Complete Audit' }} />
+    <AuditStack.Screen name="takePicture" component={AuditTakePicture} options={{ title: 'Take Picture' }} />
   </AuditStack.Navigator>
 );
 

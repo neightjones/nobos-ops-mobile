@@ -1,24 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
-import { Content, Text, ListItem, CheckBox, H2, Button } from "native-base";
+import { Content, Text, ListItem, CheckBox, H2, Button, Icon } from "native-base";
 import { ScrollView } from 'react-native-gesture-handler';
 import Info from '../../components/Info';
+import { doToggleItem } from '../../entities/Checklist/actions';
 
-const checklistItems = [
-  { id: 1, name: 'Restroom has a fresh odor with no strong disinfectant odor.' },
-  { id: 2, name: 'Mirror is clean and streak-free.' },
-  { id: 3, name: 'Sink and vanity have been disinfected and are visibly clean.' },
-  { id: 4, name: 'Amenities are properly positioned next to sink, all new and wrapped.' },
-  { id: 5, name: '4 towels are properly rolled up to display freshness - resuse policy displayed.' },
-  { id: 6, name: 'Shower and tub are properly disinfected and visibly clean.' },
-  { id: 7, name: 'Shower head is cleaned and polished.' },
-  { id: 8, name: 'Toilet is cleaned with signage showing recent sanitization.' },
-  { id: 9, name: 'Tissue box has been replaced with smaller, single-guest packaging.' },
-  { id: 10, name: 'Trash receptacle has a new liner and has been properly sanitized.' },
-];
-
-export default function AuditCreate({ navigation }) {
-  const [checkedSet, setCheckedSet] = useState(new Set());
+const AuditChecklist = props => {
+  const {
+    navigation,
+    checklist,
+    doToggleItem,
+  } = props;
 
   return (
     <View style={styles.container}>
@@ -27,26 +20,22 @@ export default function AuditCreate({ navigation }) {
           <Info text="Auditing 'Restroom Cleaning' Topic" />
         </View>
         <Content style={{ paddingRight: 10 }}>
-          {checklistItems.map(item => (
+          {checklist.map(item => (
             <ListItem key={item.id}>
               <CheckBox
                 color="green"
-                checked={checkedSet.has(item.id)}
-                onPress={() => {
-                  const next = new Set(checkedSet);
-                  if (next.has(item.id)) next.delete(item.id);
-                  else next.add(item.id);
-                  setCheckedSet(next);
-                }}
+                checked={item.checked}
+                onPress={() => doToggleItem(item.id)}
               />
-              <Text style={{ marginLeft: 10, color: checkedSet.has(item.id) ? 'green' : '#676767' }}>
-                {item.name}
+              <Text style={{ marginLeft: 10, color: item.checked ? 'green' : '#676767' }}>
+                {item.text}
               </Text>
+              <Icon name="ios-camera" onPress={() => navigation.navigate('takePicture')} />
             </ListItem>
           ))}
           <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
             <H2 style={{ color: '#676767' }}>
-              {`Score: ${checkedSet.size} / ${checklistItems.length}`}
+              {`Score: ${checklist.filter(i => i.checked).length} / ${checklist.length}`}
             </H2>
           </View>
           <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
@@ -61,7 +50,7 @@ export default function AuditCreate({ navigation }) {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -92,3 +81,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const mapStateToProps = state => ({
+  checklist: state.entities.checklists.checklist,
+});
+
+const mapDispatchToProps = dispatch => ({
+  doToggleItem: itemId => dispatch(doToggleItem(itemId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuditChecklist);
