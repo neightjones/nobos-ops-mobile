@@ -3,14 +3,17 @@ import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import { Content, Text, ListItem, CheckBox, H2, Button, Icon } from "native-base";
 import { ScrollView } from 'react-native-gesture-handler';
-import Info from '../../components/Info';
-import { doToggleItem } from '../../entities/Checklist/actions';
+import Info from 'components/Info';
+import { doToggleItem, setItemPhoto, setItemVideo, setItemComment } from 'entities/Checklist/actions';
 
 const AuditChecklist = props => {
   const {
     navigation,
     checklist,
     doToggleItem,
+    setItemPhoto,
+    setItemVideo,
+    setItemComment,
   } = props;
 
   return (
@@ -88,6 +91,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   doToggleItem: itemId => dispatch(doToggleItem(itemId)),
+  setItemPhoto: (itemId, uri) => dispatch(setItemPhoto(itemId, uri)),
+  setItemVideo: (itemId, uri) => dispatch(setItemVideo(itemId, uri)),
+  setItemComment: (itemId, text) => dispatch(setItemComment(itemId, text)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuditChecklist);

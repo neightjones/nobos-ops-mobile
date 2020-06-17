@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import DEMO_TYPE from './demo';
-import useCachedResources from './hooks/useCachedResources';
+import useCachedResources from '../hooks/useCachedResources';
 import OnboardingNavigator from './navigation/OnboardingNavigator';
 import HousekeepingNavigator from './navigation/HousekeepingNavigator';
 import ManagerNavigator from './navigation/ManagerNavigator';
