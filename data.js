@@ -93,3 +93,24 @@ export const trainingSteps = [
   //   successImageUrl: CONFIRM_SUCCESS,
   //   goBackImageUrl: CONFIRM_GO_BACK,
   // },
+
+export const trainingsDue = [
+  {
+    id: 1,
+    theme: 'Housekeeping',
+    name: 'Restroom Cleaning',
+    steps: trainingSteps, 
+  },
+  {
+    id: 2,
+    theme: 'Back of House',
+    name: 'Handwashing Requirements',
+    steps: trainingSteps, 
+  },
+  {
+    id: 3,
+    theme: 'COVID Public Space Protocols',
+    name: 'Main Lobby Cleaning',
+    steps: trainingSteps, 
+  },
+];

@@ -5,20 +5,20 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 
+import AuditCreateScreen from '../screens/Audits/Create';
+import AuditChecklistScreen from '../screens/Audits/Checklist';
+
 import LibraryThemesScreen from '../screens/Library/Themes';
 import LibraryByThemeScreen from '../screens/Library/ByTheme';
 import LibraryTopicSteps from '../screens/Library/TopicSteps';
 
-import AssignedTrainingsList from '../screens/AssignedTrainings/List';
-import AssignedTrainingsTraining from '../screens/AssignedTrainings/Training';
+const AuditStack = createStackNavigator();
 
-const AssignedTrainingStack = createStackNavigator();
-
-const AssignedTrainingStackScreen = () => (
-  <AssignedTrainingStack.Navigator>
-    <AssignedTrainingStack.Screen name="list" component={AssignedTrainingsList}  options={{ title: 'Assigned Trainings' }} />
-    <AssignedTrainingStack.Screen name="training" component={AssignedTrainingsTraining} options={{ title: 'In Training' }} />
-  </AssignedTrainingStack.Navigator>
+const AuditStackScreen = () => (
+  <AuditStack.Navigator>
+    <AuditStack.Screen name="create" component={AuditCreateScreen}  options={{ title: 'Create New Audit' }} />
+    <AuditStack.Screen name="checklist" component={AuditChecklistScreen}  options={{ title: 'Complete Audit' }} />
+  </AuditStack.Navigator>
 );
 
 const LibraryStack = createStackNavigator();
@@ -37,11 +37,11 @@ export default ({ navigation, route }) => {
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
-        name="assignedTraining"
-        component={AssignedTrainingStackScreen}
+        name="audit"
+        component={AuditStackScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-code-working" />,
-          tabBarLabel: 'Assigned Training',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="ios-list" />,
+          tabBarLabel: 'Audits',
         }}
       />
       <BottomTab.Screen
@@ -54,7 +54,7 @@ export default ({ navigation, route }) => {
       />
       <BottomTab.Screen
         name="leaderboard"
-        component={LibraryStackScreen}
+        component={AuditStackScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-ribbon" />,
           tabBarLabel: 'Leaderboard'
