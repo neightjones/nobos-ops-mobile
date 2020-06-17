@@ -3,7 +3,7 @@ import {Container, View, Text, H2} from 'native-base';
 import {Dimensions, StyleSheet} from 'react-native';
 import TrainingCard from './Card';
 import ConfirmCard from './ConfirmCard';
-import data from './data';
+import { trainingSteps as data } from '../data';
 
 import Carousel, {Pagination} from 'react-native-snap-carousel'; // Version can be specified in package.json
 

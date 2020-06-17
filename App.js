@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'native-base';
+import DEMO_TYPE from './demo';
 
 import useCachedResources from './hooks/useCachedResources';
 import OnboardingNavigator from './navigation/OnboardingNavigator';
@@ -19,12 +20,12 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
         <NavigationContainer linking={LinkingConfiguration}>
-          {userType === 'A' ? <HousekeepingNavigator /> : <OnboardingNavigator />}
+          {DEMO_TYPE === 'HSK' ? <HousekeepingNavigator /> : <OnboardingNavigator />}
         </NavigationContainer>
-        <View style={styles.buttons}>
+        {/* <View style={styles.buttons}>
           <Button style={styles.demoBtn} onPress={() => setUserType('A')} />
           <Button style={styles.demoBtn} onPress={() => setUserType('B')} />
-        </View>
+        </View> */}
       </View>
     );
   }

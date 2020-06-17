@@ -1,51 +1,42 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { LinearGradient } from 'expo-linear-gradient';
+import Info from '../../components/Info';
+import { housekeepingTheme } from '../../data';
+import ThemeTile from './ThemeTile';
 
 export default function LibraryThemes({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Text>Library Themes</Text>
-        <View style={{ flex: 1, flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'space-around' }}>
-          <TouchableOpacity
-            style={{ flexBasis: '48%', height: 100, backgroundColor: 'red', borderRadius: 2 }}
-            onPress={() => navigation.push('byTheme', { themeId: 1 })}
-          >
-            <LinearGradient
-                colors={['blue', 'grey']}
-                start={[0.0, 0.0]}
-                end={[1.0, 1.0]}
-                style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 2,
-                }}
-            />
-            <Text>Hello</Text>
-          </TouchableOpacity>
-          <View style={{ flexBasis: '48%', height: 100, backgroundColor: 'red', alignItems: 'center', justifyContent: 'center' }}>
-            <LinearGradient
-                colors={['darkred', 'midnightblue']}
-                start={[0.0, 0.0]}
-                end={[1.0, 1.0]}
-                style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 2,
-                }}
-            />
-            <Text style={{ color: '#fff', fontSize: 16 }}>Hello</Text>
-          </View>
+        <View style={styles.infoContainer}>
+          <Info text="Review training for any Theme below - Training content appears here upon completion." />
+        </View>
+        <View style={styles.cardContainer}>
+          <ThemeTile
+            theme={{ name: 'Housekeeping', colorVariant: 1 }}
+            doPress={() => navigation.push('byTheme', { theme: housekeepingTheme })}
+          />
+          <ThemeTile
+            theme={{ name: 'Front Desk', colorVariant: 2 }}
+            doPress={() => navigation.push('byTheme', { theme: housekeepingTheme })}
+          />
+          <ThemeTile
+            theme={{ name: 'Back of House', colorVariant: 3 }}
+            doPress={() => navigation.push('byTheme', { theme: housekeepingTheme })}
+          />
+          <ThemeTile
+            theme={{ name: 'COVID Public Space Protocols', colorVariant: 4 }}
+            doPress={() => navigation.push('byTheme', { theme: housekeepingTheme })}
+          />
+          <ThemeTile
+            theme={{ name: 'COVID Employee Guidelines', colorVariant: 1 }}
+            doPress={() => navigation.push('byTheme', { theme: housekeepingTheme })}
+          />
+          <ThemeTile
+            theme={{ name: 'Management Overview', colorVariant: 2 }}
+            doPress={() => navigation.push('byTheme', { theme: housekeepingTheme })}
+          />
         </View>
       </ScrollView>
     </View>
@@ -59,5 +50,16 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
+  },
+  infoContainer: {
+    width: '90%',
+    marginLeft: '7%',
+    height: 90,
+  },
+  cardContainer: {
+    flex: 1,
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });

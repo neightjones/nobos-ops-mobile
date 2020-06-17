@@ -8,7 +8,42 @@ const GARBAGE_RECYCLE = `${GRAPHICS_BASE}/garbage-recycle.png`;
 const CONFIRM_SUCCESS = `${GRAPHICS_BASE}/confirm-success.png`;
 const CONFIRM_GO_BACK = `${GRAPHICS_BASE}/confirm-go-back.png`;
 
-export default [
+export const housekeepingTheme = {
+  id: 1,
+  name: 'Housekeeping',
+  colorVariant: 1,
+  topics: [
+    {
+      id: 1,
+      name: 'Disinfectant Guide',
+      version: 1,
+      published: true,
+      description: 'todo',
+      graphicUrl: BATHROOM_AMENITIES,
+      steps: trainingSteps,
+    },
+    {
+      id: 2,
+      name: 'Room Linen Guide',
+      version: 1,
+      published: true,
+      description: 'todo',
+      graphicUrl: GARBAGE_RECYCLE,
+      steps: trainingSteps,
+    },
+    {
+      id: 3,
+      name: 'Increased Cleaning Frequencies',
+      version: 1,
+      published: true,
+      description: 'todo',
+      graphicUrl: BATHROOM_SHOWER,
+      steps: trainingSteps,
+    },
+  ],
+};
+
+export const trainingSteps = [
   {
     step: 1,
     title: "What You'll Need",
