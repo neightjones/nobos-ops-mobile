@@ -15,19 +15,19 @@ export const doToggleItem = itemId => ({
 });
 
 export const setItemPhoto = (itemId, uri) => ({
-  SET_PHOTO,
+  type: SET_PHOTO,
   itemId,
   uri,
 });
 
 export const setItemVideo = (itemId, uri) => ({
-  SET_VIDEO,
+  type: SET_VIDEO,
   itemId,
   uri,
 });
 
 export const setItemComment = (itemId, text) => ({
-  SET_COMMENT,
+  type: SET_COMMENT,
   itemId,
   text,
 });

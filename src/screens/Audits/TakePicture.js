@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { View, TouchableOpacity } from 'react-native';
 import { Icon, Text } from 'native-base';
 import { Camera } from 'expo-camera';
+import { setItemPhoto } from 'entities/Checklist/actions';
 
-export default function TakePicture({ navigation }) {
+export default function TakePicture({ navigation, route }) {
+  const itemId = route.params?.itemId;
+  const dispatch = useDispatch();
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const cameraRef = useRef(null);
@@ -28,7 +33,7 @@ export default function TakePicture({ navigation }) {
       try {
         const photo = await cameraRef.current.takePictureAsync();
         const { uri } = photo;
-        console.log('uri: ', uri);
+        dispatch(setItemPhoto(itemId, uri));
         navigation.goBack();
       } catch (e) {
         alert(`Error taking photo: ${e}`);
@@ -59,4 +64,4 @@ export default function TakePicture({ navigation }) {
       </Camera>
     </View>
   );
-}
+};
