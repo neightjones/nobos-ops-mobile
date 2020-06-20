@@ -7,6 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: asdf install
+        uses: asdf-vm/actions/install@v1
+      - uses: expo/expo-github-action@v5
+        with:
+          expo-version: 3.x
+          expo-username: ${{ secrets.EXPO_USERNAME }}
+          expo-password: ${{ secrets.EXPO_PASSWORD }}
+          expo-cache: true
       - name: Install dependencies
         run: npm ci
       - name: Semantic Release
@@ -14,13 +22,9 @@ jobs:
         id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish javascript bundles
-        env:
-          EXPO_USERNAME: ${{ secrets.EXPO_USERNAME }}
-          EXPO_PASSWORD: ${{ secrets.EXPO_PASSWORD }}
+      - name: Expo publish
         run: |
-          npm run expo -- login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
-          npm run expo -- publish
+          expo publish
   # publish:
   #   # if: github.ref == 'refs/heads/master'
   #   needs: release
