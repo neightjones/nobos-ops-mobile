@@ -14,8 +14,8 @@ jobs:
           EXPO_PASSWORD: ${{ secrets.EXPO_PASSWORD }}
         run: |
           npm ci
-          npm run release
           npm i -g expo-cli
+          npm run release
           expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
           expo publish
   # publish:
