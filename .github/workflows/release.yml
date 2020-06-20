@@ -11,6 +11,8 @@ jobs:
         uses: asdf-vm/actions/install@v1
         env:
           NODEJS_CHECK_SIGNATURES: "no"
+      - name: Set global node version
+        run: asdf global nodejs 12.18.1
       - uses: expo/expo-github-action@v5
         with:
           expo-version: 3.x
