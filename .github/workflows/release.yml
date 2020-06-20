@@ -10,27 +10,32 @@ jobs:
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm ci
-          npm run release
-  publish:
-    # if: github.ref == 'refs/heads/master'
-    needs: release
-    name: Publish javascript bundle
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Publish javascript bundle
-        env:
           EXPO_USERNAME: ${{ secrets.EXPO_USERNAME }}
           EXPO_PASSWORD: ${{ secrets.EXPO_PASSWORD }}
         run: |
+          npm ci
+          npm run release
           npm i -g expo-cli
           expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
           expo publish
+  # publish:
+  #   # if: github.ref == 'refs/heads/master'
+  #   needs: release
+  #   name: Publish javascript bundle
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Publish javascript bundle
+  #       env:
+  #         EXPO_USERNAME: ${{ secrets.EXPO_USERNAME }}
+  #         EXPO_PASSWORD: ${{ secrets.EXPO_PASSWORD }}
+  #       run: |
+  #         npm i -g expo-cli
+  #         expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
+  #         expo publish
   build-ios:
     # if: github.ref == 'refs/heads/master'
-    needs: publish
+    needs: release
     name: Build iOS app
     runs-on: macos-latest
     steps:
