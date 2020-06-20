@@ -1,0 +1,15 @@
+{
+  "branches": "build-ios",
+  "prepare": [{
+    "path": "semantic-release-expo",
+    "manifests": ["app.json"]
+  }],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "semantic-release-expo",
+    ["@semantic-release/github", {
+      "released": ["published"]
+    }]
+  ]
+}
