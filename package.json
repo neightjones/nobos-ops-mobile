@@ -7,7 +7,8 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "expo": "expo"
   },
   "jest": {
     "preset": "jest-expo"
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "babel-preset-expo": "~8.1.0",
+    "expo-cli": "^3.21.9",
     "jest-expo": "~37.0.0",
     "semantic-release": "^17.0.8",
     "semantic-release-expo": "^2.2.3"

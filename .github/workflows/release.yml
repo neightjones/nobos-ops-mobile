@@ -14,10 +14,9 @@ jobs:
           EXPO_PASSWORD: ${{ secrets.EXPO_PASSWORD }}
         run: |
           npm ci
-          npm i -g expo-cli
           npm run release
-          expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
-          expo publish
+          npm run expo -- login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
+          npm run expo -- publish
   # publish:
   #   # if: github.ref == 'refs/heads/master'
   #   needs: release
