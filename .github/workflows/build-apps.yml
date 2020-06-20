@@ -24,10 +24,11 @@ jobs:
           EXPO_IOS_PROVISION_BASE64: ${{ secrets.EXPO_IOS_PROVISION_BASE64 }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
         run: |
+          yarn global add turtle-cli@$TURTLE_VERSION
+          export PATH="$(yarn global bin):$PATH"
           npm ci
           echo $EXPO_IOS_DIST_BASE64 > dist.p12.base64 && base64 --decode dist.p12.base64 > dist.p12
           echo $EXPO_IOS_PROVISION_BASE64 > app.mobileprovision.base64 && base64 --decode app.mobileprovision.base64 > app.mobileprovision
-          npm i -g turtle-cli@$TURTLE_VERSION
           turtle setup:ios
           turtle build:ios \
             --type=archive \
