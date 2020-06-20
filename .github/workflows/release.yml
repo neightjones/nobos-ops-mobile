@@ -7,14 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
       - name: Semantic Release
+        uses: codfish/semantic-release-action@master
+        id: semantic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish javascript bundles
+        env:
           EXPO_USERNAME: ${{ secrets.EXPO_USERNAME }}
           EXPO_PASSWORD: ${{ secrets.EXPO_PASSWORD }}
         run: |
-          npm ci
-          npm run release
           npm run expo -- login -u $EXPO_USERNAME -p $EXPO_PASSWORD --non-interactive
           npm run expo -- publish
   # publish:
