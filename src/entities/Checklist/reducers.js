@@ -1,5 +1,5 @@
 import {
-  TOGGLE_ITEM, SET_PHOTO, SET_VIDEO, SET_COMMENT,
+  TOGGLE_ITEM, ADD_PHOTO, ADD_VIDEO, UPDATE_COMMENT,
 } from './actions';
 import createDefaultList from './utils';
 
@@ -14,6 +14,18 @@ const updateListItem = (prevList, itemId, property, value) => {
     if (i.id === itemId) nextList.push({
       ...i,
       [property]: value,
+    });
+    else nextList.push({ ...i });
+  });
+  return nextList;
+};
+
+const pushOntoItemList = (prevList, itemId, listProp, value) => {
+  const nextList = [];
+  prevList.forEach(i => {
+    if (i.id === itemId) nextList.push({
+      ...i,
+      [listProp]: [...i[listProp], value],
     });
     else nextList.push({ ...i });
   });
@@ -37,23 +49,23 @@ const reducer = (state = initialState, action) => {
         checklist: nextList,
       };
     }
-    case SET_PHOTO: {
+    case ADD_PHOTO: {
       const { itemId, uri } = action;
-      const nextList = updateListItem(state.checklist, itemId, 'imageUri', uri);
+      const nextList = pushOntoItemList(state.checklist, itemId, 'images', uri);
       return {
         ...state,
         checklist: nextList,
       };
     }
-    case SET_VIDEO: {
+    case ADD_VIDEO: {
       const { itemId, uri } = action;
-      const nextList = updateListItem(state.checklist, itemId, 'videoUri', uri);
+      const nextList = pushOntoItemList(state.checklist, itemId, 'videos', uri);
       return {
         ...state,
         checklist: nextList,
       };
     }
-    case SET_COMMENT: {
+    case UPDATE_COMMENT: {
       const { itemId, text } = action;
       const nextList = updateListItem(state.checklist, itemId, 'comment', text);
       return {

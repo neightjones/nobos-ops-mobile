@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Icon, Text } from 'native-base';
 import { Camera } from 'expo-camera';
-import { setItemPhoto } from 'entities/Checklist/actions';
+import { addPhoto, addVideo } from 'entities/Checklist/actions';
 import MediaTypeSwitch, { PICTURE, VIDEO } from './MediaTypeSwitch';
 
 const CAMERA_TYPE = Camera.Constants.Type.back;
@@ -46,18 +46,19 @@ export default function TakePicture({ navigation, route }) {
         const imageMime = `image/${imageExt}`;
         console.log(`imageMime: ${imageMime}`);
         let picture = await fetch(uri);
-        picture = await picture.blob();
-        const imageData = new File([picture], `photo.${imageExt}`);
-        console.log('Made the file...');
-        await fetch(SIGNED_URL, {
-          method: 'PUT',
-          body: imageData,
-          headers: {
-            'Content-Type': imageMime,
-          },
-        });
-        // dispatch(setItemPhoto(itemId, uri));
-        // navigation.goBack();
+        console.log('pic: ', picture);
+        // picture = await picture.blob();
+        // const imageData = new File([picture], `photo.${imageExt}`);
+        // console.log('Made the file...');
+        // await fetch(SIGNED_URL, {
+        //   method: 'PUT',
+        //   body: imageData,
+        //   headers: {
+        //     'Content-Type': imageMime,
+        //   },
+        // });
+        dispatch(addPhoto(itemId, uri));
+        navigation.goBack();
       } catch (e) {
         alert(`Error taking photo: ${e}`);
       }
@@ -77,18 +78,20 @@ export default function TakePicture({ navigation, route }) {
         const SIGNED_URL = 'https://nobos-audit-media.s3.amazonaws.com/video.mov?Content-Type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA227V3UENRS2LXONK%2F20200620%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200620T184900Z&X-Amz-Expires=600&X-Amz-Signature=e983b4f5c34b51aa4f8275b4241135e8c3df2d27fb3ea94a729bfa194ca07c06&X-Amz-SignedHeaders=host';
         const { uri } = videoRec;
         // const imageExt = uri.split('.').pop();
-        const videoMime = 'video/quicktime';
-        let video = await fetch(uri);
-        video = await video.blob();
-        const videoData = new File([video], 'video.mov');
-        console.log('Made the file...');
-        await fetch(SIGNED_URL, {
-          method: 'PUT',
-          body: videoData,
-          headers: {
-            'Content-Type': videoMime,
-          },
-        });
+        // const videoMime = 'video/quicktime';
+        // let video = await fetch(uri);
+        // video = await video.blob();
+        // const videoData = new File([video], 'video.mov');
+        // console.log('Made the file...');
+        // await fetch(SIGNED_URL, {
+        //   method: 'PUT',
+        //   body: videoData,
+        //   headers: {
+        //     'Content-Type': videoMime,
+        //   },
+        // });
+        dispatch(addVideo(itemId, uri));
+        navigation.goBack();
       } catch (e) {
         alert(`Error recording video: ${e}`);
       } finally {

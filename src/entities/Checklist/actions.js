@@ -1,8 +1,8 @@
 export const SUBMIT_CHECKLIST = 'SUBMIT_CHECKLIST';
 export const TOGGLE_ITEM = 'TOGGLE_ITEM';
-export const SET_PHOTO = 'SET_PHOTO';
-export const SET_VIDEO = 'SET_VIDEO';
-export const SET_COMMENT = 'SET_COMMENT';
+export const ADD_PHOTO = 'ADD_PHOTO';
+export const ADD_VIDEO = 'ADD_VIDEO';
+export const UPDATE_COMMENT = 'UPDATE_COMMENT';
 
 const doSubmitChecklist = () => ({
   type: SUBMIT_CHECKLIST,
@@ -14,25 +14,20 @@ export const doToggleItem = itemId => ({
   itemId,
 });
 
-export const setItemPhoto = (itemId, uri) => ({
-  type: SET_PHOTO,
+export const addPhoto = (itemId, uri) => ({
+  type: ADD_PHOTO,
   itemId,
   uri,
 });
 
-export const setItemVideo = (itemId, uri) => ({
-  type: SET_VIDEO,
+export const addVideo = (itemId, uri) => ({
+  type: ADD_VIDEO,
   itemId,
   uri,
 });
 
-export const setItemComment = (itemId, text) => ({
-  type: SET_COMMENT,
+export const updateComment = (itemId, text) => ({
+  type: UPDATE_COMMENT,
   itemId,
   text,
 });
-
-// export const deleteItem = (checklistId, itemId) => async dispatch => {
-//   // Successful network call
-//   dispatch(doDeleteItem(checklistId, itemId));
-// };

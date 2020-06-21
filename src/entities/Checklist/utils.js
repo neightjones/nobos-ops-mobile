@@ -17,8 +17,8 @@ const createObj = (itemText, id) => ({
   id,
   text: itemText,
   checked: false,
-  imageUri: null,
-  videoUri: null,
+  images: [],
+  videos: [],
   comment: '',
 });
 
