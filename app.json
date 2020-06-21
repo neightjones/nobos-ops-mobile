@@ -2,6 +2,7 @@
   "expo": {
     "name": "nobos-ops-mobile",
     "slug": "nobos-ops-mobile",
+    "privacy": "unlisted",
     "platforms": [
       "ios",
       "android",
@@ -23,6 +24,8 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "co.nobos-test.ops",
+      "buildNumber": "0.0.0",
       "supportsTablet": true
     },
     "web": {
