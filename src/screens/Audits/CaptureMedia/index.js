@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Icon, Text } from 'native-base';
+import { Icon, Text, Toast } from 'native-base';
 import { Camera } from 'expo-camera';
 import { addPhoto, addVideo } from 'entities/Checklist/actions';
 import MediaTypeSwitch, { PICTURE, VIDEO } from './MediaTypeSwitch';
@@ -39,27 +39,49 @@ export default function TakePicture({ navigation, route }) {
   const takePicture = async () => {
     if (cameraRef) {
       try {
-        const SIGNED_URL = 'https://nobos-audit-media.s3.amazonaws.com/photo.jpg?Content-Type=image%2Fjpg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA227V3UENRS2LXONK%2F20200620%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200620T184341Z&X-Amz-Expires=600&X-Amz-Signature=3dc22bd10aaebbcdf062fe560373c3f9e1974f00d234eb8bcd8afdbf2cb5d0a8&X-Amz-SignedHeaders=host';
         const photo = await cameraRef.current.takePictureAsync();
         const { uri } = photo;
+        console.log('photo initial uri: ' + uri);
         const imageExt = uri.split('.').pop();
         const imageMime = `image/${imageExt}`;
         console.log(`imageMime: ${imageMime}`);
         let picture = await fetch(uri);
-        console.log('pic: ', picture);
-        // picture = await picture.blob();
-        // const imageData = new File([picture], `photo.${imageExt}`);
-        // console.log('Made the file...');
-        // await fetch(SIGNED_URL, {
-        //   method: 'PUT',
-        //   body: imageData,
-        //   headers: {
-        //     'Content-Type': imageMime,
-        //   },
-        // });
+        picture = await picture.blob();
+        console.log('Made the picture...', picture);
+        console.log('Made the file...', imageFile);
+        let signedUrlRes = await fetch('http://localhost/api/v1/audits/signedPutUrl', {
+          method: 'POST',
+          body: JSON.stringify({
+            auditId: 1,
+            itemId: 1,
+            fileExtension: imageExt,
+            mimeTime: imageMime,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        signedUrlRes = await signedUrlRes.json();
+        console.log('signedUrlRes is: ' + JSON.stringify(signedUrlRes));
+        const { signedUrl, key } = signedUrlRes;
+        const imageFile = new File([picture], key);
+        console.log('req signed url: ' + signedUrl);
+        await fetch(signedUrl, {
+          method: 'PUT',
+          body: imageFile,
+          headers: {
+            'Content-Type': imageMime,
+          },
+        });
+        Toast.show({
+          text: 'Photo taken!',
+          position: 'bottom',
+          type: 'success',
+        });
         dispatch(addPhoto(itemId, uri));
         navigation.goBack();
       } catch (e) {
+        console.log('error taking photo: ', e);
         alert(`Error taking photo: ${e}`);
       }
     }
@@ -75,21 +97,25 @@ export default function TakePicture({ navigation, route }) {
           maxDuration: 30,
         });
         console.log('video: ', videoRec);
-        const SIGNED_URL = 'https://nobos-audit-media.s3.amazonaws.com/video.mov?Content-Type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA227V3UENRS2LXONK%2F20200620%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200620T184900Z&X-Amz-Expires=600&X-Amz-Signature=e983b4f5c34b51aa4f8275b4241135e8c3df2d27fb3ea94a729bfa194ca07c06&X-Amz-SignedHeaders=host';
+        const SIGNED_URL = 'https://nobos-audit-media.s3.use-east-1.amazonaws.com/video.mov?Content-Type=video%2Fquicktime&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA227V3UENRS2LXONK%2F20200621%2Fuse-east-1%2Fs3%2Faws4_request&X-Amz-Date=20200621T235319Z&X-Amz-Expires=600&X-Amz-Signature=6e302eb151116cbc6f5019d183e7e31c306a34b2cf92714cb81182b134157aff&X-Amz-SignedHeaders=host';
         const { uri } = videoRec;
-        // const imageExt = uri.split('.').pop();
-        // const videoMime = 'video/quicktime';
-        // let video = await fetch(uri);
-        // video = await video.blob();
-        // const videoData = new File([video], 'video.mov');
-        // console.log('Made the file...');
-        // await fetch(SIGNED_URL, {
-        //   method: 'PUT',
-        //   body: videoData,
-        //   headers: {
-        //     'Content-Type': videoMime,
-        //   },
-        // });
+        const videoMime = 'video/quicktime';
+        let video = await fetch(uri);
+        video = await video.blob();
+        const videoData = new File([video], 'video.mov');
+        console.log('Made the file...');
+        await fetch(SIGNED_URL, {
+          method: 'PUT',
+          body: videoData,
+          headers: {
+            'Content-Type': videoMime,
+          },
+        });
+        Toast.show({
+          text: 'Video recorded!',
+          position: 'bottom',
+          type: 'success',
+        });
         dispatch(addVideo(itemId, uri));
         navigation.goBack();
       } catch (e) {
