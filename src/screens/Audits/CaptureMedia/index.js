@@ -48,8 +48,7 @@ export default function TakePicture({ navigation, route }) {
         let picture = await fetch(uri);
         picture = await picture.blob();
         console.log('Made the picture...', picture);
-        console.log('Made the file...', imageFile);
-        let signedUrlRes = await fetch('http://localhost/api/v1/audits/signedPutUrl', {
+        let signedUrlRes = await fetch('http://192.168.0.25/api/v1/audits/signedPutUrl', {
           method: 'POST',
           body: JSON.stringify({
             auditId: 1,

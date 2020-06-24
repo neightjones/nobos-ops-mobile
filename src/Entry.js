@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, Button } from 'react-native';
+import { Auth } from 'aws-amplify';
 import DEMO_TYPE from './demo';
 import useCachedResources from '../hooks/useCachedResources';
 import OnboardingNavigator from './navigation/OnboardingNavigator';
@@ -9,6 +10,8 @@ import ManagerNavigator from './navigation/ManagerNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 
 export default function App(props) {
+  console.log('Here is entry...');
+
   const isLoadingComplete = useCachedResources();
 
   const getNavigator = () => {
@@ -25,6 +28,19 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
+        <Button
+          onPress={async () => {
+            Auth.signOut();
+            // const c = await Auth.currentSession();
+            // const idJwt = c.getIdToken().getJwtToken();
+            // const d = await Auth.currentUserInfo();
+            // const e = await Auth.currentCredentials();
+            // console.log('idJwt: ', idJwt);
+            // console.log('UserInfo: ', d);
+            // console.log('credentials: ', e);
+          }}
+          title="Sign Out"
+        />
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
         <NavigationContainer linking={LinkingConfiguration}>
           {getNavigator()}
