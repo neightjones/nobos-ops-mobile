@@ -13,8 +13,10 @@ jobs:
         uses: asdf-vm/actions/install@v1
         env:
           NODEJS_CHECK_SIGNATURES: "no"
-      - name: Set global node version
-        run: asdf global nodejs 12.18.1
+      - name: Set global nodejs and yarn version
+        run: |
+          asdf global nodejs `asdf current nodejs | cut -d " " -f1`
+          asdf global yarn `asdf current yarn | cut -d " " -f1`
       - uses: expo/expo-github-action@v5
         with:
           expo-version: 3.x
@@ -29,6 +31,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Expo publish
+        if: steps.semantic.outputs.new-release-published == 'true'
         run: |
           expo publish
   
