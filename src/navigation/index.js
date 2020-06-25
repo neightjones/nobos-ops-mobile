@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -11,6 +10,13 @@ import AuditCreateScreen from '../screens/Audits/Create';
 import AuditChecklistScreen from '../screens/Audits/Checklist';
 import AuditCaptureMedia from '../screens/Audits/CaptureMedia';
 
+const HomeStack = createStackNavigator();
+const HomeStackScreen = () => (
+  <HomeStack.Navigator>
+    <HomeStack.Screen name="home" component={HomeScreen} options={{ title: 'Home' }} />
+  </HomeStack.Navigator>
+);
+
 const AuditStack = createStackNavigator();
 const AuditStackScreen = () => (
   <AuditStack.Navigator>
@@ -21,14 +27,14 @@ const AuditStackScreen = () => (
 );
 
 const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = 'Home';
+const INITIAL_ROUTE_NAME = 'home';
 
 export default ({ navigation, route }) => {
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
         name="home"
-        component={HomeScreen}
+        component={HomeStackScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
           tabBarLabel: 'Home'
