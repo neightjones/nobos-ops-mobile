@@ -10,6 +10,7 @@ module.exports = function(api) {
           "constants": "./src/constants",
           "entities": "./src/entities",
           "screens": "./src/screens",
+          "utils": "./src/utils"
         }
       }]
     ],

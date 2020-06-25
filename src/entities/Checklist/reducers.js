@@ -1,10 +1,19 @@
 import {
-  TOGGLE_ITEM, ADD_PHOTO, ADD_VIDEO, UPDATE_COMMENT,
+  TOGGLE_ITEM,
+  ADD_PHOTO,
+  ADD_VIDEO,
+  UPDATE_COMMENT,
+  SET_FETCHING_CHECKLISTS,
+  ON_CHECKLISTS_RECEIVED,
+  SET_CREATING_INSTANCE,
+  ON_INSTANCE_CREATED,
 } from './actions';
-import createDefaultList from './utils';
 
 const initialState = {
-  checklist: createDefaultList(),
+  isFetchingChecklists: false,
+  checklists: null,
+  isCreatingInstance: false,
+  currentInstance: null,
 };
 
 // = new list
@@ -34,6 +43,26 @@ const pushOntoItemList = (prevList, itemId, listProp, value) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_FETCHING_CHECKLISTS:
+      return {
+        ...state,
+        isFetchingChecklists: action.isFetching,
+      };
+    case ON_CHECKLISTS_RECEIVED:
+      return {
+        ...state,
+        checklists: action.checklists,
+      };
+    case SET_CREATING_INSTANCE:
+      return {
+        ...state,
+        isCreatingInstance: action.isCreating,
+      };
+    case ON_INSTANCE_CREATED:
+      return {
+        ...state,
+        currentInstance: action.instance,
+      };
     case TOGGLE_ITEM: {
       const { itemId } = action;
       const nextList = [];
