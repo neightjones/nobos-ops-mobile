@@ -1,9 +1,11 @@
 import React from 'react';
 import { Root } from 'native-base';
-import { store } from './src/store/store';
+import { store, persistor } from './src/store/store';
+import { View, Text } from 'react-native';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import Amplify from 'aws-amplify';
-import { withAuthenticator, SignIn, ForgotPassword, RequireNewPassword } from 'aws-amplify-react-native'
+import { withAuthenticator } from 'aws-amplify-react-native'
 import {
   CustomSignIn,
   CustomRequireNewPassword,
@@ -28,9 +30,14 @@ Amplify.configure({
 
 const App = () => (
   <Provider store={store}>
-    <Root>
-      <Entry />
-    </Root>
+    <PersistGate
+      persistor={persistor}
+      loading={<View />}
+    >
+      <Root>
+        <Entry />
+      </Root>
+    </PersistGate>
   </Provider>
 );
 

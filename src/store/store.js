@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-// import { persistStore } from 'redux-persist';
+import { persistStore } from 'redux-persist';
 import RootReducer from './rootReducer';
 
 const middlewares = [thunk];
@@ -25,4 +25,4 @@ export const store = createStore(
   enhancer,
 );
 
-// export const persistor = persistStore(store);
+export const persistor = persistStore(store);
