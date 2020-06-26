@@ -9,22 +9,22 @@ import Camera from './Camera';
 
 const CaptureMediaContainer = props => {
   return (
-    <Camera {...props} uploadMediaToS3={uploadMediaToS3} />
+    <Camera {...props} />
   );
 };
 
 CaptureMediaContainer.propTypes = {
   createChecklistInstanceItemMedia: PropTypes.func.isRequired,
+  uploadMediaToS3: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = state => ({
-
-});
 
 const mapDispatchToProps = dispatch => ({
   createChecklistInstanceItemMedia: (itemId, clInstId, type, fileExt, mime, localUri) => (
     dispatch(createChecklistInstanceItemMedia(itemId, clInstId, type, fileExt, mime, localUri))
   ),
+  uploadMediaToS3: (signedUrl, fileRef, mimeType) => (
+    dispatch(uploadMediaToS3(signedUrl, fileRef, mimeType))
+  ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CaptureMediaContainer);
+export default connect(null, mapDispatchToProps)(CaptureMediaContainer);

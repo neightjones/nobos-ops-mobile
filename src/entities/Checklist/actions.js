@@ -104,19 +104,24 @@ export const patchChecklistInstanceItem = (itemId, field, curr, next) => async d
   }
 };
 
-export const uploadMediaToS3 = async (signedUrl, fileRef, mimeType) => {
-  console.log('upload to s3...');
-  console.log('signedUrl: ' + signedUrl);
-  console.log('fileRef: ' + fileRef);
-  console.log('mimeType: ' + mimeType);
-  await fetch(signedUrl, {
-    method: 'PUT',
-    body: fileRef,
-    headers: {
-      'Content-Type': mimeType,
-    },
-  });
-  console.log('Successful PUT to s3');
+export const uploadMediaToS3 = (
+  signedUrl,
+  fileRef,
+  mimeType
+) => async dispatch => {
+  // console.log('upload to s3...');
+  try {
+    await fetchThrowable(signedUrl, {
+      method: 'PUT',
+      body: fileRef,
+      headers: {
+        'Content-Type': mimeType,
+      },
+    });
+    // console.log('Successful PUT to s3');
+  } catch (e) {
+    // console.log('S3 issue! ', e.message);
+  }
 };
 
 export const createChecklistInstanceItemMedia = (
@@ -128,7 +133,6 @@ export const createChecklistInstanceItemMedia = (
   localUri
 ) => async dispatch => {
   try {
-    // dispatch(setCreatingInstance(true));
     const headers = await getHeaders(true);
     const body = JSON.stringify({ checklistInstanceId, fileExtension, mimeType });
     const options = { headers, method: 'post', body };
@@ -137,9 +141,9 @@ export const createChecklistInstanceItemMedia = (
     const json = await res.json();
     const { media, signedUrl } = json;
     if (type === 'PICTURE') {
-      dispatch(addPhoto(itemId, localUri, media.id));
+      await dispatch(addPhoto(itemId, localUri, media.id));
     } else {
-      dispatch(addVideo(itemId, localUri, media.id));
+      await dispatch(addVideo(itemId, localUri, media.id));
     }
     return {
       remoteMediaId: media.id,
@@ -148,7 +152,5 @@ export const createChecklistInstanceItemMedia = (
     };
   } catch (e) {
     console.error(`Failed to createChecklistInstance: ${e}`);
-  } finally {
-    // dispatch(setCreatingInstance(false));
   }
 };

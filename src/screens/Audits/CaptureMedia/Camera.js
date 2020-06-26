@@ -46,13 +46,12 @@ const CameraViewer = props => {
       try {
         const photo = await cameraRef.current.takePictureAsync();
         const { uri } = photo;
-        console.log('photo initial uri: ' + uri);
+        // console.log('photo initial uri: ' + uri);
         const imageExt = uri.split('.').pop();
         const imageMime = `image/${imageExt}`;
-        console.log(`imageMime: ${imageMime}`);
+        // console.log(`imageMime: ${imageMime}`);
         let picture = await fetch(uri);
         picture = await picture.blob();
-        console.log('Made the picture...', picture);
         const { signedUrl, key } = await createChecklistInstanceItemMedia(
           itemId,
           checklistInstanceId,
@@ -62,7 +61,7 @@ const CameraViewer = props => {
           uri
         );
         const imageFile = new File([picture], key);
-        console.log('req signed url: ' + signedUrl);
+        // console.log('req signed url: ' + signedUrl);
         uploadMediaToS3(signedUrl, imageFile, imageMime);
         Toast.show({
           text: 'Photo taken!',
@@ -71,7 +70,7 @@ const CameraViewer = props => {
         });
         navigation.goBack();
       } catch (e) {
-        console.log('error taking photo: ', e);
+        // console.log('error taking photo: ', e);
         alert(`Error taking photo: ${e}`);
       }
     }
@@ -86,7 +85,6 @@ const CameraViewer = props => {
         const videoRec = await cameraRef.current.recordAsync({
           maxDuration: 30,
         });
-        console.log('video: ', videoRec);
         const { uri } = videoRec;
         const videoExt = uri.split('.').pop();
         const videoMime = 'video/quicktime'; // TODO: this is for iOS
@@ -100,10 +98,10 @@ const CameraViewer = props => {
           videoMime,
           uri
         );
-        const videoFile = new File([video], 'video.mov');
-        console.log('Made the file...');
+        const videoFile = new File([video], key);
+        // console.log('Made the video file...');
         // Not waiting on this...
-        // uploadMediaToS3(signedUrl, videoFile, videoMime);
+        uploadMediaToS3(signedUrl, videoFile, videoMime);
         Toast.show({
           text: 'Video recorded!',
           position: 'bottom',

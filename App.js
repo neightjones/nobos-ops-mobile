@@ -1,7 +1,7 @@
 import React from 'react';
 import { Root } from 'native-base';
 import { store, persistor } from './src/store/store';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import Amplify from 'aws-amplify';
