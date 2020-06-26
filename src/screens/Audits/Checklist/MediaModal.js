@@ -8,9 +8,9 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const MediaModal = props => {
   const { item, open, close } = props;
   if (!item) return null;
-  const { text, images, videos } = item;
-  console.log('imagesss: ', images);
-  console.log('videos: ', videos);
+  const { text, media } = item;
+  const images = [];
+  const videos = [];
 
   return (
     <Modal

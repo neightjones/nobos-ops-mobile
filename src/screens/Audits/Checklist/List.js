@@ -4,6 +4,7 @@ import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Container, Content, Text, ListItem, CheckBox, H2, Button, Icon, Card, Body, Switch } from "native-base";
 import Info from 'components/Info';
 import MediaModal from './MediaModal';
+import CommentModal from './CommentModal';
 
 const List = props => {
   const {
@@ -14,10 +15,17 @@ const List = props => {
   const { name, instanceItems } = currentInstance;
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
   const [mediaItemSelected, setMediaItemSelected] = useState('');
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
+  const [commentItemSelected, setCommentItemSelected] = useState('');
 
   const onOpenMediaModal = item => {
     setMediaItemSelected(item);
     setMediaModalOpen(true);
+  };
+
+  const onOpenCommentModal = item => {
+    setCommentItemSelected(item);
+    setCommentModalOpen(true);
   };
 
   const doTogglePass = (id, curr) => {
@@ -32,6 +40,13 @@ const List = props => {
           open={mediaModalOpen}
           close={() => setMediaModalOpen(false)}
           item={mediaItemSelected}
+        />
+        {/* Modal to show Comment only needs one instance */}
+        <CommentModal
+          open={commentModalOpen}
+          close={() => setCommentModalOpen(false)}
+          item={commentItemSelected}
+          patchChecklistInstanceItem={patchChecklistInstanceItem}
         />
         <View style={styles.infoContainer}>
           <Info text={`Auditing: ${name}`} />
@@ -54,7 +69,7 @@ const List = props => {
                 </View>
                 <TouchableOpacity
                   style={styles.widgetHolder}
-                  onPress={() => navigation.navigate('captureMedia', { itemId: id })}
+                  onPress={() => onOpenCommentModal(item)}
                 >
                   <Icon name="md-chatbubbles" style={{ color: '#676767' }} />
                   <Text style={styles.widgetText2}>
