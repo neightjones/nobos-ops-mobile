@@ -6,11 +6,11 @@ import { Video } from 'expo-av';
 const screenWidth = Math.round(Dimensions.get('window').width);
 
 const MediaModal = props => {
-  const { item, open, close } = props;
+  const { item, open, close, photoCache, videoCache } = props;
   if (!item) return null;
-  const { text, media } = item;
-  const images = [];
-  const videos = [];
+  const { id, text } = item;
+  const images = photoCache[id] || [];
+  const videos = videoCache[id] || [];
 
   return (
     <Modal
@@ -37,8 +37,8 @@ const MediaModal = props => {
           )}
           {images.map(image => (
             <Image
-              key={image}
-              source={{ isStatic: true, uri: image }}
+              key={image.remoteMediaId}
+              source={{ isStatic: true, uri: image.localUri }}
               style={styles.imageView}
             />
           ))}
@@ -55,8 +55,8 @@ const MediaModal = props => {
           )}
           {videos.map(video => (
             <Video
-              key={video}
-              source={{ isStatic: true, uri: video }}
+              key={video.remoteMediaId}
+              source={{ isStatic: true, uri: video.localUri }}
               rate={1.0}
               volume={1.0}
               isMuted={false}

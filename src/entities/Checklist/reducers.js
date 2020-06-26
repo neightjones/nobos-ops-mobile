@@ -10,11 +10,20 @@ import {
   ON_PATCH_INSTANCE_ITEM,
 } from './actions';
 
+/**
+ * photo / video cache... quick way to display media
+ * in app by keeping the references to photos / videos that
+ * were taken. Do for now since media saved on server won't
+ * have the local references that make for easy display:
+ * maintains { localUri, remoteMediaId } in order to delete remotely as well
+ */
 const initialState = {
   isFetchingChecklists: false,
   checklists: null,
   isCreatingInstance: false,
   currentInstance: null,
+  photoCache: {},
+  videoCache: {},
 };
 
 // = new list
@@ -80,19 +89,29 @@ const reducer = (state = initialState, action) => {
       };
     }
     case ADD_PHOTO: {
-      const { itemId, uri } = action;
-      const nextList = pushOntoItemList(state.checklist, itemId, 'images', uri);
+      const { itemId, localUri, remoteMediaId } = action;
+      const currForItem = state.photoCache[itemId] || [];
+      const nextForItem = [...currForItem, { localUri, remoteMediaId }];
+
       return {
         ...state,
-        checklist: nextList,
+        photoCache: {
+          ...state.photoCache,
+          [itemId]: nextForItem,
+        },
       };
     }
     case ADD_VIDEO: {
-      const { itemId, uri } = action;
-      const nextList = pushOntoItemList(state.checklist, itemId, 'videos', uri);
+      const { itemId, localUri, remoteMediaId } = action;
+      const currForItem = state.videoCache[itemId] || [];
+      const nextForItem = [...currForItem, { localUri, remoteMediaId }];
+
       return {
         ...state,
-        checklist: nextList,
+        videoCache: {
+          ...state.videoCache,
+          [itemId]: nextForItem,
+        },
       };
     }
     case UPDATE_COMMENT: {

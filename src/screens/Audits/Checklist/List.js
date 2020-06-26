@@ -11,8 +11,10 @@ const List = props => {
     navigation,
     currentInstance,
     patchChecklistInstanceItem,
+    photoCache,
+    videoCache,
   } = props;
-  const { name, instanceItems } = currentInstance;
+  const { id: checklistInstanceId, name, instanceItems } = currentInstance;
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
   const [mediaItemSelected, setMediaItemSelected] = useState('');
   const [commentModalOpen, setCommentModalOpen] = useState(false);
@@ -40,6 +42,8 @@ const List = props => {
           open={mediaModalOpen}
           close={() => setMediaModalOpen(false)}
           item={mediaItemSelected}
+          photoCache={photoCache}
+          videoCache={videoCache}
         />
         {/* Modal to show Comment only needs one instance */}
         <CommentModal
@@ -78,7 +82,7 @@ const List = props => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.widgetHolder}
-                  onPress={() => navigation.navigate('captureMedia', { itemId: id })}
+                  onPress={() => navigation.navigate('captureMedia', { itemId: id, checklistInstanceId })}
                 >
                   <Icon
                     name="ios-camera"
@@ -128,6 +132,8 @@ List.propTypes = {
   navigation: PropTypes.object.isRequired,
   currentInstance: PropTypes.object.isRequired,
   patchChecklistInstanceItem: PropTypes.func.isRequired,
+  photoCache: PropTypes.object.isRequired,
+  videoCache: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({

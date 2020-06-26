@@ -33,7 +33,7 @@ const fetchThrowable = async (url, options) => {
   return res;
 };
 
-const apiUrl = 'http://localhost'; //process.env.REACT_APP_CORE_API_URL;
+const apiUrl = 'http://192.168.0.25' // 'http://localhost'; //process.env.REACT_APP_CORE_API_URL;
 
 export {
   getHeaders,

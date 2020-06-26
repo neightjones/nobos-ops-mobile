@@ -33,10 +33,14 @@ const AuditChecklistMain = props => {
 AuditChecklistMain.propTypes = {
   currentInstance: PropTypes.object,
   patchChecklistInstanceItem: PropTypes.func.isRequired,
+  photoCache: PropTypes.object.isRequired,
+  videoCache: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   currentInstance: state.entities.checklists.currentInstance,
+  photoCache: state.entities.checklists.photoCache,
+  videoCache: state.entities.checklists.videoCache,
 });
 
 const mapDispatchToProps = dispatch => ({
