@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Container, Content, Text, ListItem, CheckBox, H2, Button, Icon, Card, Body, Switch } from "native-base";
 import Info from 'components/Info';
@@ -7,16 +8,20 @@ import MediaModal from './MediaModal';
 const List = props => {
   const {
     navigation,
-    checklist,
-    doToggleItem,
-    updateComment,
+    currentInstance,
+    patchChecklistInstanceItem,
   } = props;
+  const { name, instanceItems } = currentInstance;
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
   const [mediaItemSelected, setMediaItemSelected] = useState('');
 
   const onOpenMediaModal = item => {
     setMediaItemSelected(item);
     setMediaModalOpen(true);
+  };
+
+  const doTogglePass = (id, curr) => {
+    patchChecklistInstanceItem(id, 'pass', curr, !curr);
   };
 
   return (
@@ -29,20 +34,20 @@ const List = props => {
           item={mediaItemSelected}
         />
         <View style={styles.infoContainer}>
-          <Info text="Auditing 'Restroom Cleaning' Topic" />
+          <Info text={`Auditing: ${name}`} />
         </View>
-        {checklist.map(item => {
-          const { id, text, checked } = item;
+        {instanceItems.map(item => {
+          const { id, text, pass } = item;
 
           return (
             <View
               key={id}
-              style={[styles.itemView, { borderColor: checked ? '#5BC236' : 'rgba(0, 0, 0, .12)' }]}
+              style={[styles.itemView, { borderColor: pass ? '#5BC236' : 'rgba(0, 0, 0, .12)' }]}
             >
               <Text style={styles.itemText}>{text}</Text>
               <View style={styles.widgetsHolder}>
                 <View style={styles.widgetHolder}>
-                  <Switch style={styles.switchHolder} value={checked} onValueChange={() => doToggleItem(id)} />
+                  <Switch style={styles.switchHolder} value={pass} onValueChange={() => doTogglePass(id, pass)} />
                   <Text style={styles.widgetText}>
                     Pass?
                   </Text>
@@ -80,30 +85,15 @@ const List = props => {
                     See Photos & Videos
                   </Text>
                 </TouchableOpacity>               
-                {/*
-                <TouchableOpacity
-                  style={styles.widgetHolder}
-                  onPress={() => navigation.navigate('captureMedia', { itemId: id })}
-                >
-                  {mediaLen > 0
-                    ? (
-                      <Text>
-                        {`View ${mediaLen} photo${mediaLen === 1 ? '' : 's'} or video${mediaLen === 1 ? '' : 's'}`}
-                      </Text>
-                    ) : (
-                      <Text style={styles.widgetText2}>
-                        No photos or videos, yet
-                      </Text>
-                    )}
-                </TouchableOpacity>
-                */}
               </View>
             </View>
           );
         })}
-        <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+
+
+        {/* <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
           <H2 style={{ color: '#676767' }}>
-            {`Score: ${checklist.filter(i => i.checked).length} / ${checklist.length}`}
+            {`Score: ${checklist.filter(i => i.pass).length} / ${checklist.length}`}
           </H2>
         </View>
         <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
@@ -113,10 +103,16 @@ const List = props => {
           >
             <Text>Finish</Text>
           </Button>
-        </View>
+        </View> */}
       </Content>
     </Container>
   );
+};
+
+List.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  currentInstance: PropTypes.object.isRequired,
+  patchChecklistInstanceItem: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

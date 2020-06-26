@@ -1,23 +1,17 @@
 import { apiUrl, getHeaders, fetchThrowable } from 'utils/fetch';
 
 export const SUBMIT_CHECKLIST = 'SUBMIT_CHECKLIST';
-export const TOGGLE_ITEM = 'TOGGLE_ITEM';
 export const ADD_PHOTO = 'ADD_PHOTO';
 export const ADD_VIDEO = 'ADD_VIDEO';
-export const UPDATE_COMMENT = 'UPDATE_COMMENT';
 export const SET_FETCHING_CHECKLISTS = 'SET_FETCHING_CHECKLISTS';
 export const ON_CHECKLISTS_RECEIVED = 'ON_CHECKLISTS_RECEIVED';
 export const SET_CREATING_INSTANCE = 'SET_CREATING_INSTANCE';
 export const ON_INSTANCE_CREATED = 'ON_INSTANCE_CREATED';
+export const ON_PATCH_INSTANCE_ITEM = 'ON_PATCH_INSTANCE_ITEM';
 
 const doSubmitChecklist = () => ({
   type: SUBMIT_CHECKLIST,
   checklistId,
-});
-
-export const doToggleItem = itemId => ({
-  type: TOGGLE_ITEM,
-  itemId,
 });
 
 export const addPhoto = (itemId, uri) => ({
@@ -30,12 +24,6 @@ export const addVideo = (itemId, uri) => ({
   type: ADD_VIDEO,
   itemId,
   uri,
-});
-
-export const updateComment = (itemId, text) => ({
-  type: UPDATE_COMMENT,
-  itemId,
-  text,
 });
 
 const setFetchingChecklists = isFetching => ({
@@ -86,5 +74,30 @@ export const createChecklistInstance = checklistId => async dispatch => {
     console.error(`Failed to createChecklistInstance: ${e}`);
   } finally {
     dispatch(setCreatingInstance(false));
+  }
+};
+
+const doPatchInstanceItem = (itemId, field, value) => ({
+  type: ON_PATCH_INSTANCE_ITEM,
+  itemId,
+  field,
+  value,
+});
+
+export const patchChecklistInstanceItem = (itemId, field, curr, next) => async dispatch => {
+  try {
+    // immediately dispatch patch to store
+    dispatch(doPatchInstanceItem(itemId, field, next));
+
+    const headers = await getHeaders(true);
+    const body = JSON.stringify({ [field]: next });
+    const options = { headers, method: 'patch', body };
+    await fetchThrowable(
+      `${apiUrl}/api/v1/audits/checklist-instance-items/${itemId}`,
+      options
+    );
+  } catch (e) {
+    // revert value (assuming error here)
+    dispatch(doPatchInstanceItem(itemId, field, curr));
   }
 };

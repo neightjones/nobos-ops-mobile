@@ -5,7 +5,8 @@ import {
   fetchChecklists,
   createChecklistInstance,
 } from 'entities/Checklist/actions';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
+import { Button, Text } from 'native-base';
 import Create from './Create';
 
 const CreateAuditContainer = props => {
@@ -25,6 +26,12 @@ const CreateAuditContainer = props => {
     return (
       <View>
         <Text>Already have one</Text>
+        <Button
+          onPress={() => navigation.navigate('checklist')}
+          style={{ alignSelf: 'center' }}
+        >
+          <Text>Go to Active Audit</Text>
+        </Button>
       </View>
     );
   }

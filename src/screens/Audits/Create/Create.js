@@ -62,8 +62,11 @@ const AuditInstanceCreate = props => {
           </Form>
           <Button
             style={styles.button}
-            disabled={isCreatingInstance}
-            onPress={() => createChecklistInstance(checklist)}
+            disabled={isCreatingInstance || !checklist}
+            onPress={async () => {
+              await createChecklistInstance(checklist);
+              navigation.navigate('checklist');
+            }}
           >
             <Text>Create Audit</Text>
           </Button>

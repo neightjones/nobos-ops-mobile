@@ -7,6 +7,7 @@ import {
   ON_CHECKLISTS_RECEIVED,
   SET_CREATING_INSTANCE,
   ON_INSTANCE_CREATED,
+  ON_PATCH_INSTANCE_ITEM,
 } from './actions';
 
 const initialState = {
@@ -100,6 +101,25 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         checklist: nextList,
+      };
+    }
+    case ON_PATCH_INSTANCE_ITEM: {
+      const { itemId, field, value } = action;
+      const instanceItems = state.currentInstance?.instanceItems ?? [];
+      const nextInstanceItems = [];
+      instanceItems.forEach(item => {
+        if (item.id === itemId) {
+          nextInstanceItems.push({ ...item, [field]: value });
+        } else {
+          nextInstanceItems.push({ ...item });
+        }
+      });
+      return {
+        ...state,
+        currentInstance: {
+          ...state.currentInstance,
+          instanceItems: nextInstanceItems,
+        },
       };
     }
     default: return state;
