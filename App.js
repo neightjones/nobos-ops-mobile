@@ -1,9 +1,12 @@
 import React from 'react';
 import { Root } from 'native-base';
-import { store } from './src/store/store';
+import { store, persistor } from './src/store/store';
+import { View } from 'react-native';
 import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import Amplify from 'aws-amplify';
-import { withAuthenticator, SignIn, ForgotPassword, RequireNewPassword } from 'aws-amplify-react-native'
+import Constants from 'expo-constants';
+import { withAuthenticator } from 'aws-amplify-react-native'
 import {
   CustomSignIn,
   CustomRequireNewPassword,
@@ -11,13 +14,11 @@ import {
 } from './src/auth';
 import Entry from './src/Entry';
 
-// Note web doesn't have the sub-Auth key -
-// Version difference?
 Amplify.configure({
   Auth: {
-    region: 'us-east-1',
-    userPoolId: 'us-east-1_KOjGZCS7Y',
-    userPoolWebClientId: '2mpcfrp8vktnoknajsvboat9un',
+    region: Constants.manifest.extra.cognitoRegion,
+    userPoolId: Constants.manifest.extra.cognitoUserPoolId,
+    userPoolWebClientId: Constants.manifest.extra.cognitoWebClientId,
   },
   Analytics: {
     // re: https://github.com/aws-amplify/amplify-js/issues/3484#issuecomment-504891009
@@ -28,9 +29,14 @@ Amplify.configure({
 
 const App = () => (
   <Provider store={store}>
-    <Root>
-      <Entry />
-    </Root>
+    <PersistGate
+      persistor={persistor}
+      loading={<View />}
+    >
+      <Root>
+        <Entry />
+      </Root>
+    </PersistGate>
   </Provider>
 );
 

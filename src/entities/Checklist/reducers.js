@@ -1,10 +1,31 @@
 import {
-  TOGGLE_ITEM, ADD_PHOTO, ADD_VIDEO, UPDATE_COMMENT,
+  TOGGLE_ITEM,
+  ADD_PHOTO,
+  ADD_VIDEO,
+  UPDATE_COMMENT,
+  SET_FETCHING_CHECKLISTS,
+  ON_CHECKLISTS_RECEIVED,
+  SET_CREATING_INSTANCE,
+  ON_INSTANCE_CREATED,
+  ON_PATCH_INSTANCE,
+  ON_PATCH_INSTANCE_ITEM,
+  CLEAR_CURRENT_INSTANCE,
 } from './actions';
-import createDefaultList from './utils';
 
+/**
+ * photo / video cache... quick way to display media
+ * in app by keeping the references to photos / videos that
+ * were taken. Do for now since media saved on server won't
+ * have the local references that make for easy display:
+ * maintains { localUri, remoteMediaId } in order to delete remotely as well
+ */
 const initialState = {
-  checklist: createDefaultList(),
+  isFetchingChecklists: false,
+  checklists: null,
+  isCreatingInstance: false,
+  currentInstance: null,
+  photoCache: {},
+  videoCache: {},
 };
 
 // = new list
@@ -34,6 +55,26 @@ const pushOntoItemList = (prevList, itemId, listProp, value) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_FETCHING_CHECKLISTS:
+      return {
+        ...state,
+        isFetchingChecklists: action.isFetching,
+      };
+    case ON_CHECKLISTS_RECEIVED:
+      return {
+        ...state,
+        checklists: action.checklists,
+      };
+    case SET_CREATING_INSTANCE:
+      return {
+        ...state,
+        isCreatingInstance: action.isCreating,
+      };
+    case ON_INSTANCE_CREATED:
+      return {
+        ...state,
+        currentInstance: action.instance,
+      };
     case TOGGLE_ITEM: {
       const { itemId } = action;
       const nextList = [];
@@ -50,19 +91,29 @@ const reducer = (state = initialState, action) => {
       };
     }
     case ADD_PHOTO: {
-      const { itemId, uri } = action;
-      const nextList = pushOntoItemList(state.checklist, itemId, 'images', uri);
+      const { itemId, localUri, remoteMediaId } = action;
+      const currForItem = state.photoCache[itemId] || [];
+      const nextForItem = [...currForItem, { localUri, remoteMediaId }];
+
       return {
         ...state,
-        checklist: nextList,
+        photoCache: {
+          ...state.photoCache,
+          [itemId]: nextForItem,
+        },
       };
     }
     case ADD_VIDEO: {
-      const { itemId, uri } = action;
-      const nextList = pushOntoItemList(state.checklist, itemId, 'videos', uri);
+      const { itemId, localUri, remoteMediaId } = action;
+      const currForItem = state.videoCache[itemId] || [];
+      const nextForItem = [...currForItem, { localUri, remoteMediaId }];
+
       return {
         ...state,
-        checklist: nextList,
+        videoCache: {
+          ...state.videoCache,
+          [itemId]: nextForItem,
+        },
       };
     }
     case UPDATE_COMMENT: {
@@ -71,6 +122,43 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         checklist: nextList,
+      };
+    }
+    case ON_PATCH_INSTANCE: {
+      const { checklistInstanceId, field, value } = action;
+      return {
+        ...state,
+        currentInstance: {
+          ...state.currentInstance,
+          [field]: value,
+        },
+      };
+    }
+    case ON_PATCH_INSTANCE_ITEM: {
+      const { itemId, field, value } = action;
+      const instanceItems = state.currentInstance?.instanceItems ?? [];
+      const nextInstanceItems = [];
+      instanceItems.forEach(item => {
+        if (item.id === itemId) {
+          nextInstanceItems.push({ ...item, [field]: value });
+        } else {
+          nextInstanceItems.push({ ...item });
+        }
+      });
+      return {
+        ...state,
+        currentInstance: {
+          ...state.currentInstance,
+          instanceItems: nextInstanceItems,
+        },
+      };
+    }
+    case CLEAR_CURRENT_INSTANCE: {
+      return {
+        ...state,
+        currentInstance: null,
+        photoCache: {},
+        videoCache: {},
       };
     }
     default: return state;

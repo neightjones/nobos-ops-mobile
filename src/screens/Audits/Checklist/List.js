@@ -1,22 +1,52 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Container, Content, Text, ListItem, CheckBox, H2, Button, Icon, Card, Body, Switch } from "native-base";
 import Info from 'components/Info';
 import MediaModal from './MediaModal';
+import CommentModal from './CommentModal';
 
 const List = props => {
   const {
     navigation,
-    checklist,
-    doToggleItem,
-    updateComment,
+    currentInstance,
+    completeChecklistInstance,
+    patchChecklistInstanceItem,
+    photoCache,
+    videoCache,
   } = props;
+  const { id: checklistInstanceId, name, instanceItems } = currentInstance;
   const [mediaModalOpen, setMediaModalOpen] = useState(false);
   const [mediaItemSelected, setMediaItemSelected] = useState('');
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
+  const [commentItemSelected, setCommentItemSelected] = useState('');
+
+  const score = instanceItems.filter(i => i.pass).length / instanceItems.length;
 
   const onOpenMediaModal = item => {
     setMediaItemSelected(item);
     setMediaModalOpen(true);
+  };
+
+  const onOpenCommentModal = item => {
+    setCommentItemSelected(item);
+    setCommentModalOpen(true);
+  };
+
+  const doTogglePass = (id, curr) => {
+    patchChecklistInstanceItem(id, 'pass', curr, !curr);
+  };
+
+  const onSubmit = async () => {
+    try {
+      await completeChecklistInstance(
+        checklistInstanceId,
+        score,
+      );
+      navigation.navigate('create');
+    } catch (e) {
+      console.error(`Error on checklist submit: ${e}`);
+    }
   };
 
   return (
@@ -27,29 +57,38 @@ const List = props => {
           open={mediaModalOpen}
           close={() => setMediaModalOpen(false)}
           item={mediaItemSelected}
+          photoCache={photoCache}
+          videoCache={videoCache}
+        />
+        {/* Modal to show Comment only needs one instance */}
+        <CommentModal
+          open={commentModalOpen}
+          close={() => setCommentModalOpen(false)}
+          item={commentItemSelected}
+          patchChecklistInstanceItem={patchChecklistInstanceItem}
         />
         <View style={styles.infoContainer}>
-          <Info text="Auditing 'Restroom Cleaning' Topic" />
+          <Info text={`Auditing: ${name}`} />
         </View>
-        {checklist.map(item => {
-          const { id, text, checked } = item;
+        {instanceItems.map(item => {
+          const { id, text, pass } = item;
 
           return (
             <View
               key={id}
-              style={[styles.itemView, { borderColor: checked ? '#5BC236' : 'rgba(0, 0, 0, .12)' }]}
+              style={[styles.itemView, { borderColor: pass ? '#5BC236' : 'rgba(0, 0, 0, .12)' }]}
             >
               <Text style={styles.itemText}>{text}</Text>
               <View style={styles.widgetsHolder}>
                 <View style={styles.widgetHolder}>
-                  <Switch style={styles.switchHolder} value={checked} onValueChange={() => doToggleItem(id)} />
+                  <Switch style={styles.switchHolder} value={pass} onValueChange={() => doTogglePass(id, pass)} />
                   <Text style={styles.widgetText}>
                     Pass?
                   </Text>
                 </View>
                 <TouchableOpacity
                   style={styles.widgetHolder}
-                  onPress={() => navigation.navigate('captureMedia', { itemId: id })}
+                  onPress={() => onOpenCommentModal(item)}
                 >
                   <Icon name="md-chatbubbles" style={{ color: '#676767' }} />
                   <Text style={styles.widgetText2}>
@@ -58,7 +97,7 @@ const List = props => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.widgetHolder}
-                  onPress={() => navigation.navigate('captureMedia', { itemId: id })}
+                  onPress={() => navigation.navigate('captureMedia', { itemId: id, checklistInstanceId })}
                 >
                   <Icon
                     name="ios-camera"
@@ -80,43 +119,37 @@ const List = props => {
                     See Photos & Videos
                   </Text>
                 </TouchableOpacity>               
-                {/*
-                <TouchableOpacity
-                  style={styles.widgetHolder}
-                  onPress={() => navigation.navigate('captureMedia', { itemId: id })}
-                >
-                  {mediaLen > 0
-                    ? (
-                      <Text>
-                        {`View ${mediaLen} photo${mediaLen === 1 ? '' : 's'} or video${mediaLen === 1 ? '' : 's'}`}
-                      </Text>
-                    ) : (
-                      <Text style={styles.widgetText2}>
-                        No photos or videos, yet
-                      </Text>
-                    )}
-                </TouchableOpacity>
-                */}
               </View>
             </View>
           );
         })}
+
+
         <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
           <H2 style={{ color: '#676767' }}>
-            {`Score: ${checklist.filter(i => i.checked).length} / ${checklist.length}`}
+            {`Score: ${instanceItems.filter(i => i.pass).length} / ${instanceItems.length}`}
           </H2>
         </View>
         <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
           <Button
             style={styles.button}
-            onPress={() => navigation.navigate('checklist')}
+            onPress={() => onSubmit()}
           >
-            <Text>Finish</Text>
+            <Text>Submit</Text>
           </Button>
         </View>
       </Content>
     </Container>
   );
+};
+
+List.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  currentInstance: PropTypes.object.isRequired,
+  completeChecklistInstance: PropTypes.func.isRequired,
+  patchChecklistInstanceItem: PropTypes.func.isRequired,
+  photoCache: PropTypes.object.isRequired,
+  videoCache: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -137,8 +170,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#303f9f',
     marginBottom: 20,
-    width: 75,
-    textAlign: 'center',
+    alignSelf: 'center',
   },
   itemView: {
     backgroundColor: '#fff',
