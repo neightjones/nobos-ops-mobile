@@ -7,7 +7,9 @@ export const SET_FETCHING_CHECKLISTS = 'SET_FETCHING_CHECKLISTS';
 export const ON_CHECKLISTS_RECEIVED = 'ON_CHECKLISTS_RECEIVED';
 export const SET_CREATING_INSTANCE = 'SET_CREATING_INSTANCE';
 export const ON_INSTANCE_CREATED = 'ON_INSTANCE_CREATED';
+export const ON_PATCH_INSTANCE = 'ON_PATCH_INSTANCE';
 export const ON_PATCH_INSTANCE_ITEM = 'ON_PATCH_INSTANCE_ITEM';
+export const CLEAR_CURRENT_INSTANCE = 'CLEAR_CURRENT_INSTANCE';
 
 const doSubmitChecklist = () => ({
   type: SUBMIT_CHECKLIST,
@@ -79,6 +81,44 @@ export const createChecklistInstance = checklistId => async dispatch => {
   }
 };
 
+const clearCurrentInstance = () => ({
+  type: CLEAR_CURRENT_INSTANCE,
+});
+
+const doPatchInstance = (checklistInstanceId, field, value) => ({
+  type: ON_PATCH_INSTANCE,
+  checklistInstanceId,
+  field,
+  value,
+});
+
+export const patchChecklistInstance = (
+  checklistInstanceId,
+  field,
+  curr,
+  next
+) => async dispatch => {
+  try {
+    // immediately dispatch patch to store
+    dispatch(doPatchInstance(checklistInstanceId, field, next));
+
+    const headers = await getHeaders(true);
+    const body = JSON.stringify({ [field]: next });
+    const options = { headers, method: 'patch', body };
+    await fetchThrowable(
+      `${apiUrl}/api/v1/audits/checklist-instances/${checklistInstanceId}`,
+      options
+    );
+
+    if (field === 'status' && next === 'CANCELED') {
+      dispatch(clearCurrentInstance());
+    }
+  } catch (e) {
+    // revert value (assuming error here)
+    dispatch(doPatchInstance(checklistInstanceId, field, curr));
+  }
+};
+
 const doPatchInstanceItem = (itemId, field, value) => ({
   type: ON_PATCH_INSTANCE_ITEM,
   itemId,
@@ -86,7 +126,12 @@ const doPatchInstanceItem = (itemId, field, value) => ({
   value,
 });
 
-export const patchChecklistInstanceItem = (itemId, field, curr, next) => async dispatch => {
+export const patchChecklistInstanceItem = (
+  itemId,
+  field,
+  curr,
+  next
+) => async dispatch => {
   try {
     // immediately dispatch patch to store
     dispatch(doPatchInstanceItem(itemId, field, next));

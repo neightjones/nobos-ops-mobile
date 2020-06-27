@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import {
   fetchChecklists,
   createChecklistInstance,
+  patchChecklistInstance,
 } from 'entities/Checklist/actions';
-import { View } from 'react-native';
-import { Button, Text } from 'native-base';
+import Existing from './Existing';
 import Create from './Create';
 
 const CreateAuditContainer = props => {
@@ -18,21 +18,16 @@ const CreateAuditContainer = props => {
     isFetchingChecklists,
     createChecklistInstance,
     checklists,
+    patchChecklistInstance,
   } = props;
-
-
 
   if (currentInstance !== null) {
     return (
-      <View>
-        <Text>Already have one</Text>
-        <Button
-          onPress={() => navigation.navigate('checklist')}
-          style={{ alignSelf: 'center' }}
-        >
-          <Text>Go to Active Audit</Text>
-        </Button>
-      </View>
+      <Existing
+        navigation={navigation}
+        currentInstance={currentInstance}
+        patchChecklistInstance={patchChecklistInstance}
+      />
     );
   }
 
@@ -56,6 +51,7 @@ CreateAuditContainer.propTypes = {
   isFetchingChecklists: PropTypes.bool.isRequired,
   createChecklistInstance: PropTypes.func.isRequired,
   checklists: PropTypes.arrayOf(PropTypes.object),
+  patchChecklistInstance: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -69,6 +65,9 @@ const mapDispatchToProps = dispatch => ({
   fetchChecklists: () => dispatch(fetchChecklists()),
   createChecklistInstance: checklistId => (
     dispatch(createChecklistInstance(checklistId))
+  ),
+  patchChecklistInstance: (instId, field, curr, next) => (
+    dispatch(patchChecklistInstance(instId, field, curr, next))
   ),
 });
 

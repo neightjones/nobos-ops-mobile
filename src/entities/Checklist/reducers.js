@@ -7,7 +7,9 @@ import {
   ON_CHECKLISTS_RECEIVED,
   SET_CREATING_INSTANCE,
   ON_INSTANCE_CREATED,
+  ON_PATCH_INSTANCE,
   ON_PATCH_INSTANCE_ITEM,
+  CLEAR_CURRENT_INSTANCE,
 } from './actions';
 
 /**
@@ -122,6 +124,16 @@ const reducer = (state = initialState, action) => {
         checklist: nextList,
       };
     }
+    case ON_PATCH_INSTANCE: {
+      const { checklistInstanceId, field, value } = action;
+      return {
+        ...state,
+        currentInstance: {
+          ...state.currentInstance,
+          [field]: value,
+        },
+      };
+    }
     case ON_PATCH_INSTANCE_ITEM: {
       const { itemId, field, value } = action;
       const instanceItems = state.currentInstance?.instanceItems ?? [];
@@ -139,6 +151,14 @@ const reducer = (state = initialState, action) => {
           ...state.currentInstance,
           instanceItems: nextInstanceItems,
         },
+      };
+    }
+    case CLEAR_CURRENT_INSTANCE: {
+      return {
+        ...state,
+        currentInstance: null,
+        photoCache: {},
+        videoCache: {},
       };
     }
     default: return state;
