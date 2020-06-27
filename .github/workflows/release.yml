@@ -24,7 +24,7 @@ jobs:
           expo-password: ${{ secrets.EXPO_PASSWORD }}
           expo-cache: true
       - name: Install dependencies
-        run: npm ci
+        run: yarn
       - name: Semantic Release
         uses: codfish/semantic-release-action@master
         id: semantic
