@@ -53,6 +53,13 @@ const HomeContainer = props => {
               </Card>
             </View>
           )}
+          <Button
+            style={styles.logoutBtn}
+            danger
+            onPress={() => Auth.signOut()}
+          >
+            <Text>Log Out</Text>
+          </Button>
       </Content>
     </Container>
   )
@@ -86,5 +93,8 @@ const styles = StyleSheet.create({
   },
   authBtn: {
     alignSelf: 'center',
+  },
+  logoutBtn: {
+    marginTop: 30,
   },
 });
