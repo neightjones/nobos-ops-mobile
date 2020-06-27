@@ -10,6 +10,11 @@
     "semantic-release-expo",
     ["@semantic-release/github", {
       "released": ["published"]
+    }, {
+      "assets": [{
+        "path": "app.json",
+        "label": "app.json"
+      }]
     }]
   ]
 }
