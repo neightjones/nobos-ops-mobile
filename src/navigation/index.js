@@ -29,7 +29,7 @@ const AuditStackScreen = () => (
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'home';
 
-export default ({ navigation, route }) => {
+export default () => {
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen

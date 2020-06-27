@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import { AsyncStorage } from 'react-native';
 import { persistReducer } from 'redux-persist';
-import ChecklistReducer from '../entities/Checklist/reducers';
+import ChainReducer from '../entities/Chain/reducer';
+import ChecklistReducer from '../entities/Checklist/reducer';
 
 const currentChecklistInstancePersistConfig = {
   key: 'root',
@@ -19,5 +20,6 @@ export default combineReducers({
       currentChecklistInstancePersistConfig,
       ChecklistReducer
     ),
+    chain: ChainReducer,
   }),
 });
