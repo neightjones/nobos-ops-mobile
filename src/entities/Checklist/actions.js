@@ -119,6 +119,24 @@ export const patchChecklistInstance = (
   }
 };
 
+export const completeChecklistInstance = (
+  checklistInstanceId,
+  score,
+) => async dispatch => {
+  try {
+    const headers = await getHeaders(true);
+    const body = JSON.stringify({ score });
+    const options = { headers, method: 'post', body };
+    await fetchThrowable(
+      `${apiUrl}/api/v1/audits/checklist-instances/${checklistInstanceId}/complete`,
+      options
+    );
+    dispatch(clearCurrentInstance());
+  } catch (e) {
+    // ...
+  }
+};
+
 const doPatchInstanceItem = (itemId, field, value) => ({
   type: ON_PATCH_INSTANCE_ITEM,
   itemId,

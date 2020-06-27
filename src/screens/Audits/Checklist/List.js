@@ -10,6 +10,7 @@ const List = props => {
   const {
     navigation,
     currentInstance,
+    completeChecklistInstance,
     patchChecklistInstanceItem,
     photoCache,
     videoCache,
@@ -19,6 +20,8 @@ const List = props => {
   const [mediaItemSelected, setMediaItemSelected] = useState('');
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [commentItemSelected, setCommentItemSelected] = useState('');
+
+  const score = instanceItems.filter(i => i.pass).length / instanceItems.length;
 
   const onOpenMediaModal = item => {
     setMediaItemSelected(item);
@@ -32,6 +35,18 @@ const List = props => {
 
   const doTogglePass = (id, curr) => {
     patchChecklistInstanceItem(id, 'pass', curr, !curr);
+  };
+
+  const onSubmit = async () => {
+    try {
+      await completeChecklistInstance(
+        checklistInstanceId,
+        score,
+      );
+      navigation.navigate('create');
+    } catch (e) {
+      console.error(`Error on checklist submit: ${e}`);
+    }
   };
 
   return (
@@ -110,19 +125,19 @@ const List = props => {
         })}
 
 
-        {/* <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
+        <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
           <H2 style={{ color: '#676767' }}>
-            {`Score: ${checklist.filter(i => i.pass).length} / ${checklist.length}`}
+            {`Score: ${instanceItems.filter(i => i.pass).length} / ${instanceItems.length}`}
           </H2>
         </View>
         <View style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
           <Button
             style={styles.button}
-            onPress={() => navigation.navigate('checklist')}
+            onPress={() => onSubmit()}
           >
-            <Text>Finish</Text>
+            <Text>Submit</Text>
           </Button>
-        </View> */}
+        </View>
       </Content>
     </Container>
   );
@@ -131,6 +146,7 @@ const List = props => {
 List.propTypes = {
   navigation: PropTypes.object.isRequired,
   currentInstance: PropTypes.object.isRequired,
+  completeChecklistInstance: PropTypes.func.isRequired,
   patchChecklistInstanceItem: PropTypes.func.isRequired,
   photoCache: PropTypes.object.isRequired,
   videoCache: PropTypes.object.isRequired,
@@ -154,8 +170,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#303f9f',
     marginBottom: 20,
-    width: 75,
-    textAlign: 'center',
+    alignSelf: 'center',
   },
   itemView: {
     backgroundColor: '#fff',

@@ -3,11 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View } from 'react-native';
 import { Button, Text } from 'native-base';
-import { patchChecklistInstanceItem } from 'entities/Checklist/actions';
+import {
+  completeChecklistInstance,
+  patchChecklistInstanceItem,
+} from 'entities/Checklist/actions';
 import List from './List';
 
 const AuditChecklistMain = props => {
-  const { navigation, currentInstance } = props;
+  const {
+    navigation,
+    currentInstance,
+  } = props;
 
   // Should not have this case
   if (!currentInstance) {
@@ -32,6 +38,7 @@ const AuditChecklistMain = props => {
 
 AuditChecklistMain.propTypes = {
   currentInstance: PropTypes.object,
+  completeChecklistInstance: PropTypes.func.isRequired,
   patchChecklistInstanceItem: PropTypes.func.isRequired,
   photoCache: PropTypes.object.isRequired,
   videoCache: PropTypes.object.isRequired,
@@ -46,6 +53,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   patchChecklistInstanceItem: (itemId, field, curr, next) => (
     dispatch(patchChecklistInstanceItem(itemId, field, curr, next))
+  ),
+  completeChecklistInstance: (instId, score) => (
+    dispatch(completeChecklistInstance(instId, score))
   ),
 });
 
