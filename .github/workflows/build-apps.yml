@@ -1,4 +1,4 @@
-name: Build Apps Actions Panel
+name: Build Apps
 on:
   repository_dispatch:
     types: [release]

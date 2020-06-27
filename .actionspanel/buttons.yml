@@ -1,4 +1,4 @@
 buttons:
-  - title: Build apps
+  - title: Build Apps
     action: "build-apps"
     description: Build native apps
