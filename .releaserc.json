@@ -9,8 +9,7 @@
     "@semantic-release/release-notes-generator",
     "semantic-release-expo",
     ["@semantic-release/github", {
-      "released": ["published"]
-    }, {
+      "released": ["published"],
       "assets": [{
         "path": "app.json",
         "label": "app.json"
