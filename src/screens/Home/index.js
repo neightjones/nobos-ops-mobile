@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Auth } from 'aws-amplify';
 import { View, StyleSheet, Image } from 'react-native';
 import {
@@ -14,6 +16,7 @@ import {
 const HomeContainer = props => {
   const {
     navigation,
+    chainName,
   } = props;
   const [userDetails, setUserDetails] = useState(null);
 
@@ -50,6 +53,12 @@ const HomeContainer = props => {
                     Go to Auditing
                   </Text>
                 </Button>
+                <Text style={styles.centerText}>
+                  Your Organization:
+                </Text>
+                <Text style={styles.centerText}>
+                  {chainName}
+                </Text>
               </Card>
             </View>
           )}
@@ -65,7 +74,16 @@ const HomeContainer = props => {
   )
 };
 
-export default HomeContainer;
+HomeContainer.propTypes = {
+  navigation: PropTypes.object.isRequired,
+  chainName: PropTypes.string,
+};
+
+const mapStateToProps = state => ({
+  chainName: state.entities.chain.chain.name,
+});
+
+export default connect(mapStateToProps)(HomeContainer);
 
 const styles = StyleSheet.create({
   content: {
@@ -93,8 +111,12 @@ const styles = StyleSheet.create({
   },
   authBtn: {
     alignSelf: 'center',
+    marginBottom: 20,
   },
   logoutBtn: {
     marginTop: 30,
+  },
+  centerText: {
+    textAlign: 'center',
   },
 });
